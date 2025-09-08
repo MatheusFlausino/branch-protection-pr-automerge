@@ -36,7 +36,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: merge pull request
-        run: gh pr merge ${{ steps.cpr.outputs.pr_number }} --merge --auto "1"
+        run: gh pr merge ${{ steps.cpr.outputs.pr_number }} --merge --auto
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     
