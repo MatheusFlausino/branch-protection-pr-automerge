@@ -1,0 +1,42 @@
+name: Sync
+
+on:
+  push:
+    branches: [ "main" ]
+
+  workflow_dispatch:
+
+permissions:
+  pull-requests: write
+  contents: write
+
+jobs:
+  sync-branchs:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        base: ['feat/sync01']
+
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 1
+      
+      - name: create pull request
+        id: cpr
+        run: |
+          pr_url=$(gh pr create -B "${{ matrix.base }}" -H 'main' --title 'Sync branchs' --body 'Created by Github action')
+          
+          pr_number=$(basename "$pr_url")
+          
+          echo "pr_url=$pr_url" >> $GITHUB_OUTPUT
+          echo "pr_number=$pr_number" >> $GITHUB_OUTPUT
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: merge pull request
+        run: gh pr merge ${{ steps.cpr.outputs.pr_number }} --merge --auto
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    
