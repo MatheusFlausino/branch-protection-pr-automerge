@@ -13,6 +13,10 @@ permissions:
 jobs:
   sync-branchs:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        base: ['feat/sync01']
 
     steps:
       - uses: actions/checkout@v5
@@ -22,7 +26,7 @@ jobs:
       - name: create pull request
         id: cpr
         run: |
-          pr_url=$(gh pr create -B main -H 'feat/sync01' --title 'Sync branchs' --body 'Created by Github action')
+          pr_url=$(gh pr create -B "${{ matrix.base }}" -H 'main' --title 'Sync branchs' --body 'Created by Github action')
           
           pr_number=$(basename "$pr_url")
           
