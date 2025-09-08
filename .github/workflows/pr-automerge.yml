@@ -1,0 +1,23 @@
+name: Sync
+
+on:
+  push:
+    branches: [ "main" ]
+
+  workflow_dispatch:
+
+permissions:
+  pull-requests: write
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: create pull request
+        run: gh pr create -B main -H 'feat/sync01' --title 'Sync branchs' --body 'Created by Github action' --merge --auto "1"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
